@@ -1,0 +1,33 @@
+Execução de comandos para gerenciamento de Migrations por "Package Manager Console" e ".NET CLI" sequencialmente
+
+- Adicionar uma nova migration	
+	- Add-Migration <NomeDaMigration>	
+	- dotnet ef migrations add <NomeDaMigration>
+
+- Remover a última migration	
+	- Remove-Migration	
+	- dotnet ef migrations remove
+
+- Atualizar o banco de dados	
+	- Update-Database	
+	- dotnet ef database update
+
+- Reverter para uma migration	
+	- Update-Database <NomeDaMigration>	
+	- dotnet ef database update <NomeDaMigration>
+
+- Gerar o script SQL da migration	
+	- Script-Migration	
+	- dotnet ef migrations script
+
+- Especificar intervalo de scripts	
+	- Script-Migration <De> <Para>	
+	- dotnet ef migrations script <De> <Para>
+
+- Verificar migrations aplicadas	
+	- Não disponível no PMC	
+	- dotnet ef migrations list
+
+- Atualizar o banco para um estado	
+	- Não disponível no PMC	
+	- dotnet ef database update 0 (remove todas)

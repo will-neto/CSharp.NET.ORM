@@ -1,18 +1,47 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CSharp.NET.ORM.EntityFrameworkCore.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Diagnostics.CodeAnalysis;
 
 namespace CSharp.NET.ORM.EntityFrameworkCore.Data.Context
 {
+    /*
+     * Classe DbContext é uma das principais classes do Framework do EF Core
+     * Atua como uma unidade de trabalho que encapsula a lógica de acesso e persistência a um banco de dados 
+     * Pode ser usada diretamente, mas comumente usada utilizando uma classe especializada (como no exemplo abaixo - LivrariaContext)
+     * Cada classe especializada só pode trabalhar com apenas um provedor de Banco de Dados
+     * Em caso de múltiplas conexões, criar multiplas classes especializadas
+     */
+
     public class LivrariaContext : DbContext
     {
         public LivrariaContext(DbContextOptions<LivrariaContext> dbContext) : base(dbContext)
         {
             /* 
              * DbContextOptions é a classe responsável para aplicar configurações customizadas do contexto.
-             * Essas configurações são aplicadas a partir do método OnConfiguring e devem ser aplicadas através do builder.           
+             * Essas configurações são aplicadas a partir do método OnConfiguring e devem ser aplicadas através do builder.
+             * 
+             * Usar o DbContextOptions<T> (genérico) quando estamos trabalhando com uma subclasse especializada (LivrariaContext)
+             * Usar o DbContextOptions (não-genérico) quando pretendemos utilizar a subclasse como herança para outra subclase mais especializada
             */
         }
+
+
+        #region . . . Coleção de Entidades . . .
+
+        /*
+         * A classe DbSet representa uma coleção de entidades
+         * Cada propriedade definida através do tipo DbSet<T> representa uma tabela no banco de dados
+         * Porém, não existe uma necessidade obrigatória de declarar via propriedade
+         *  - Mais detalhes nos comentários método OnModelConfiguration
+         */
+
+        public DbSet<Livraria> Livraria { get; set; }
+        public DbSet<Livro> Livro { get; set; }
+        public DbSet<Autor> Autor { get; set; }
+
+        #endregion
+
 
         #region . . . Métodos de Configuração . . .
 
@@ -38,6 +67,28 @@ namespace CSharp.NET.ORM.EntityFrameworkCore.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            /*
+             * Como comentado anteriormente, podemos contornar a necessidade de declarar um DbSet para cada classe utilizando
+             * um scan de assemblies de duas formas:
+             *  
+             *  - Através da entidade, passando o assembly da classe através do método AddEntityType. Essa abordagem
+             *  possibilita que todas as classes no mesmo assembly também sejam mapeadas.
+             *  
+             *  - Através da Fluent API Configuration, passando o assembly da classe especializada de configuração de uma
+             *  entidade. Essa abordagem possibilita que todas as classes especializadas de configurações no mesmo assembly
+             *  também sejam mapeadas.
+             */
+
+            /* Através do Assembly da Entidade (consequentemente mapeando as demais) */
+            /*
+                modelBuilder.Model.AddEntityType(typeof(Livraria));
+            */
+
+            /* Através do Assembly da Fluent API Configuration */
+            /*
+                modelBuilder.ApplyConfigurationsFromAssembly(typeof(LivrariaContext).Assembly);
+             */
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -130,4 +181,5 @@ namespace CSharp.NET.ORM.EntityFrameworkCore.Data.Context
 
 
     }
+
 }

@@ -1,0 +1,16 @@
+﻿version: '3.8'
+
+services:
+  livraria_database:
+    image: mcr.microsoft.com/mssql/server
+    container_name: livraria_db_container
+    environment:
+      - SA_PASSWORD=Senh@2024***
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - livraria_data:/var/opt/mssql
+
+volumes:
+  livraria_data:
