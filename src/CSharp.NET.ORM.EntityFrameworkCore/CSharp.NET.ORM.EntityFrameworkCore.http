@@ -1,0 +1,6 @@
+@CSharp.NET.ORM.EntityFrameworkCore_HostAddress = http://localhost:5021
+
+GET {{CSharp.NET.ORM.EntityFrameworkCore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
